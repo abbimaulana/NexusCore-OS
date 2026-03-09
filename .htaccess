@@ -1,0 +1,69 @@
+# ============================================================
+# NexusCore OS — .htaccess
+# Apache configuration: security hardening + URL rewrites
+# ============================================================
+
+# Disable directory listing
+Options -Indexes
+
+# Enable rewrite engine
+RewriteEngine On
+
+# ---------------------------------------------------------------
+# Redirect legacy /admin and /login paths to the custom gate
+# ---------------------------------------------------------------
+RewriteRule ^admin/?$  gate-access.php [R=301,L]
+RewriteRule ^login/?$  gate-access.php [R=301,L]
+
+# ---------------------------------------------------------------
+# Security headers
+# ---------------------------------------------------------------
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options    "nosniff"
+    Header always set X-Frame-Options           "SAMEORIGIN"
+    Header always set X-XSS-Protection          "1; mode=block"
+    Header always set Referrer-Policy           "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy        "geolocation=(), microphone=(), camera=()"
+</IfModule>
+
+# ---------------------------------------------------------------
+# Protect sensitive files from direct HTTP access
+# ---------------------------------------------------------------
+<Files "config.php">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+<Files "database.sql">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+# Prevent access to dotfiles (e.g. .git, .env)
+<FilesMatch "^\.">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# ---------------------------------------------------------------
+# PHP hardening (shared-hosting friendly)
+# ---------------------------------------------------------------
+<IfModule mod_php8.c>
+    php_flag display_errors       Off
+    php_flag log_errors           On
+    php_value session.cookie_httponly 1
+    php_value session.use_strict_mode 1
+</IfModule>
+<IfModule mod_php7.c>
+    php_flag display_errors       Off
+    php_flag log_errors           On
+    php_value session.cookie_httponly 1
+    php_value session.use_strict_mode 1
+</IfModule>
+
+# ---------------------------------------------------------------
+# Uploads directory — deny PHP execution
+# ---------------------------------------------------------------
+<IfModule mod_rewrite.c>
+    RewriteRule ^assets/uploads/.*\.php$ - [F,L]
+</IfModule>
