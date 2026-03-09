@@ -47,8 +47,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 );
                 $stmt->bind_param('ssi', $keywords, $respText, $isActive);
             }
-            $msg  = $stmt->execute() ? 'Response saved.' : 'Save failed.';
-            $type = $stmt->affected_rows < 0 ? 'error' : 'success';
+            $ok   = $stmt->execute();
+            $msg  = $ok ? 'Response saved.' : 'Save failed.';
+            $type = $ok ? 'success' : 'error';
             $stmt->close();
         } else {
             $msg  = 'Keywords and response text are required.';

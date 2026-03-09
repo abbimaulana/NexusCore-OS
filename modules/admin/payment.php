@@ -96,8 +96,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 );
                 $stmt->bind_param('ssssi', $mType, $label, $detailJson, $qrImage, $isActive);
             }
-            $msg  = $stmt->execute() ? 'Payment method saved.' : 'Save failed.';
-            $type = $stmt->affected_rows < 0 ? 'error' : 'success';
+            $ok   = $stmt->execute();
+            $msg  = $ok ? 'Payment method saved.' : 'Save failed.';
+            $type = $ok ? 'success' : 'error';
             $stmt->close();
         }
     }

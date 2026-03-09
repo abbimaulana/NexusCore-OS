@@ -22,8 +22,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
     if (in_array($newStatus, $allowed, true) && $orderId > 0 && $db) {
         $stmt = $db->prepare('UPDATE orders SET status = ? WHERE id = ?');
         $stmt->bind_param('si', $newStatus, $orderId);
-        $msg  = $stmt->execute() ? 'Order status updated.' : 'Update failed.';
-        $type = $stmt->affected_rows < 0 ? 'error' : 'success';
+        $ok   = $stmt->execute();
+        $msg  = $ok ? 'Order status updated.' : 'Update failed.';
+        $type = $ok ? 'success' : 'error';
         $stmt->close();
     } else {
         $msg  = 'Invalid input.';

@@ -82,8 +82,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $imagePath, $category, $isActive, $flashPrice, $flashEnd
                 );
             }
-            $msg  = $stmt->execute() ? ($id > 0 ? 'Product updated.' : 'Product created.') : 'Save failed: ' . h($db->error);
-            $type = $stmt->affected_rows < 0 ? 'error' : 'success';
+            $ok   = $stmt->execute();
+            $msg  = $ok ? ($id > 0 ? 'Product updated.' : 'Product created.') : 'Save failed: ' . h($db->error);
+            $type = $ok ? 'success' : 'error';
             $stmt->close();
         }
     }

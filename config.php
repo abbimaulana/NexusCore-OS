@@ -24,6 +24,10 @@ $RECOVERY_EMAIL = 'admin@nexuscore.os';
 // ---------------------------------------------------------------
 define('SITE_VERSION',     '1.0.0');
 define('ADMIN_LOGIN_PATH', 'gate-access.php');
+/** Seconds to lock an account after MAX_LOGIN_ATTEMPTS consecutive failures. */
+define('LOGIN_LOCKOUT_SECONDS', 900);  // 15 minutes
+/** Number of failed login attempts before account lockout. */
+define('MAX_LOGIN_ATTEMPTS', 5);
 
 // ---------------------------------------------------------------
 // 4. DATABASE CONNECTION (MySQLi)

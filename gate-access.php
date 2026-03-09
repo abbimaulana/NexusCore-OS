@@ -63,11 +63,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $attempts = $user['failed_attempts'] + 1;
                     $lockUntil = null;
 
-                    if ($attempts >= 5) {
-                        $lockUntil = date('Y-m-d H:i:s', time() + 900); // 15 min
-                        $error     = 'Too many failed attempts. Account locked for 15 minutes.';
+                    if ($attempts >= MAX_LOGIN_ATTEMPTS) {
+                        $lockUntil = date('Y-m-d H:i:s', time() + LOGIN_LOCKOUT_SECONDS);
+                        $error     = 'Too many failed attempts. Account locked for ' . (LOGIN_LOCKOUT_SECONDS / 60) . ' minutes.';
                     } else {
-                        $remaining = 5 - $attempts;
+                        $remaining = MAX_LOGIN_ATTEMPTS - $attempts;
                         $error     = "Invalid credentials. {$remaining} attempt(s) remaining before lockout.";
                     }
 
